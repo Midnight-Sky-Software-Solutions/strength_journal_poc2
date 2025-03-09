@@ -11,12 +11,11 @@ namespace StrengthJournal.API.Controllers
     public class WorkoutsController : ControllerBase
     {
         [HttpGet]
-        [Authorize]
         public async Task<IEnumerable<GetWorkoutsResponse>> GetWorkouts()
         {
             using (var db = DB.SqlConnection)
             {
-                var userId = HttpContext.GetUserId();
+                var userId = Guid.Parse("DF072196-0EBB-4E4D-B5C7-4E0C02BCE795");
                 var sql = "EXEC spGetWorkouts @UserId";
                 var workouts = await db.QueryAsync<GetWorkoutsResponse>(sql, new { UserId = userId });
                 return workouts;
