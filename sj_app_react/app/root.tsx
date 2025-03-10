@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
 
       <PrimeReactProvider>
-        <body>
+        <body className="bg-gray-100">
           <Header />
           {children}
           <ScrollRestoration />
