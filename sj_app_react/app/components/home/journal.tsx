@@ -10,19 +10,13 @@ export default function Journal() {
   const [working, setWorking] = useState(true);
   const [ workouts, setWorkouts ] = useState([] as components["schemas"]["GetWorkoutsResponse"][]);
   useEffect(() => {
-    auth0.getTokenSilently()
-      .then(token =>
-        sjclient.GET('/api/Workouts', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }))
+    sjclient.GET('/api/Workouts')
       .then(res => {
         if (res.response.ok) {
           setWorkouts(res.data!);
         }
         setWorking(false);
-      })
+      });
   }, []);
   return (
     <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
