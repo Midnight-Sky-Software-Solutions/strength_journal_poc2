@@ -2,6 +2,7 @@ import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import { auth0 } from "lib/clients/auth0-client";
 import sjclient from "lib/clients/sj-client";
 import type { components } from "lib/clients/sj-client.d";
+import { dateFormat1 } from "lib/utils";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 
@@ -30,7 +31,7 @@ export default function Journal() {
         {workouts.map(workout => (
           <div className="flex gap-5 items-center">
             <div className="w-6"><PencilSquareIcon /></div>
-            <div className="text-lg">{workout.entryDateUTC}</div>
+            <div className="text-lg">{dateFormat1(workout.entryDateUTC!)}</div>
           </div>
         ))}
       </div>
