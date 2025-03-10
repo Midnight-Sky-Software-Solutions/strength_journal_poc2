@@ -12,6 +12,7 @@ import "./app.css";
 
 import { PrimeReactProvider } from 'primereact/api';
 import { Auth0Provider } from "@auth0/auth0-react";
+import Header from "./components/header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <PrimeReactProvider>
         <body>
+          <Header />
           {children}
           <ScrollRestoration />
           <Scripts />
@@ -49,17 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Auth0Provider
-      domain="dev-bs65rtlog25jigd0.us.auth0.com"
-      clientId="byMfHvaRsuKC1IGM9SLQtrIaAvS7wL5v"
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: 'https://localhost:7080/api',
-        scope: "read:current_user",
-      }}
-    >
-      <Outlet />
-    </Auth0Provider>
+    <Outlet />
   );
 }
 

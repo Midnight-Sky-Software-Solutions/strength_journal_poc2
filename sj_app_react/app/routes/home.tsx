@@ -14,26 +14,6 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
 
-  const { loginWithRedirect, isAuthenticated, isLoading, getAccessTokenSilently  } = useAuth0();
-
-  if (!isAuthenticated && !isLoading) {
-    loginWithRedirect();
-  }
-
-  useEffect(() => {
-    getAccessTokenSilently(tokenAuthParams)
-      .then(token => {
-        return sjclient.GET('/api/Workouts', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      })
-      .then(res => {
-        console.log(res);
-      })
-  }, [])
-
   return (
     <div className="p-5">
       <Link to='/workouts/d44e8d25-6f16-416d-87ea-dcb5214bebb3'>
