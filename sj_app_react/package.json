@@ -10,7 +10,6 @@
     "genclient": "openapi-typescript ../StrengthJournal.API/spec/swagger.json -o ./lib/clients/sj-client.d.ts"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.3.0",
     "@auth0/auth0-spa-js": "^2.1.3",
     "@heroicons/react": "^2.2.0",
     "@react-router/node": "^7.3.0",

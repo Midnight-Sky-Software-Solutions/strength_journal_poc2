@@ -11,8 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 
 import { PrimeReactProvider } from 'primereact/api';
-import { Auth0Provider } from "@auth0/auth0-react";
-import Header from "./components/header";
+import Header from "./components/layout/header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
