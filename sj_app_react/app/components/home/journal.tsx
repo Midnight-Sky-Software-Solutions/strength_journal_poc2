@@ -7,30 +7,51 @@ import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 
 export default function Journal() {
-  const [working, setWorking] = useState(true);
+  const perPage = 5;
+  const [working, setWorking] = useState(false);
+  const [noMorePages, setNoMorePages] = useState(false);
   const [ workouts, setWorkouts ] = useState([] as components["schemas"]["GetWorkoutsResponse"][]);
+  const [ page, setPage ] = useState(0);
   useEffect(() => {
-    sjclient.GET('/api/Workouts')
-      .then(res => {
-        if (res.response.ok) {
-          setWorkouts(res.data!);
+    setWorking(true);
+    sjclient.GET('/api/Workouts', {
+      params: {
+        query: {
+          page: page,
+          perPage: perPage
         }
-        setWorking(false);
-      });
-  }, []);
+      }
+    })
+    .then(res => {
+      if (res.response.ok) {
+        if (res.data!.length == 0) {
+          setNoMorePages(true);
+        }
+        setWorkouts(workouts.concat(res.data!));
+      }
+      setWorking(false);
+    });
+  }, [page]);
   return (
     <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
       <h2 className="text-2xl font-bold">Journal</h2>
       <div className="flex flex-col gap-6 pt-5">
         {workouts.map(workout => (
-          <div className="flex gap-5 items-center">
+          <div key={workout.id} className="flex gap-5 items-center">
             <div className="w-6"><PencilSquareIcon /></div>
             <div className="text-lg">{dateFormat1(workout.entryDateUTC!)}</div>
           </div>
         ))}
       </div>
       <div className="pt-5 flex justify-center">
-        <Button outlined label="Load More" size="small" loading={working} />
+        <Button 
+          outlined 
+          label="Load More" 
+          size="small" 
+          loading={working} 
+          onClick={() => setPage(page+1)}
+          disabled={noMorePages}
+        />
       </div>
     </div>
   );

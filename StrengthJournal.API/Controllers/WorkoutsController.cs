@@ -12,13 +12,18 @@ namespace StrengthJournal.API.Controllers
     {
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<GetWorkoutsResponse>> GetWorkouts()
+        public async Task<IEnumerable<GetWorkoutsResponse>> GetWorkouts([FromQuery] int page, [FromQuery] int perPage)
         {
             using (var db = DB.SqlConnection)
             {
                 var userId = HttpContext.GetUserId();
-                var sql = "EXEC spGetWorkouts @UserId";
-                var workouts = await db.QueryAsync<GetWorkoutsResponse>(sql, new { UserId = userId });
+                var sql = "EXEC spGetWorkouts @UserId, @Page, @PerPage";
+                var workouts = await db.QueryAsync<GetWorkoutsResponse>(sql, new 
+                { 
+                    UserId = userId,
+                    Page = page,
+                    perPage = perPage
+                });
                 return workouts;
             }
         }
