@@ -7,13 +7,6 @@ const sjclient = createClient<paths>({
 
 export default sjclient;
 
-export const tokenAuthParams = {
-  authorizationParams: {
-    audience: 'https://localhost:7080/api',
-    scope: "read:current_user",
-  }
-};
-
 const sjMiddleware: Middleware = {
   
   async onRequest({ request }) {
