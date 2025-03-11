@@ -1,4 +1,4 @@
-﻿namespace StrengthJournal.API.Model
+﻿namespace StrengthJournal.API.Model.Workouts
 {
     public class GetWorkoutsResponse
     {

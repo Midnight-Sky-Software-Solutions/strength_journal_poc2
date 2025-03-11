@@ -1,6 +1,6 @@
 import { Bars3Icon, UserCircleIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router";
 
 const navItems = [
   { name: 'Dashboard', href: '' },
@@ -10,6 +10,10 @@ const navItems = [
 
 export default function Header() {
   const [showNav, setShowNav] = useState(false);
+  const location = useLocation();
+  useEffect(() => {
+    setShowNav(false);
+  }, [location]);
   return (
     <div className="w-full flex justify-center bg-white">
       <div className="grow max-w-6xl px-2 py-1">

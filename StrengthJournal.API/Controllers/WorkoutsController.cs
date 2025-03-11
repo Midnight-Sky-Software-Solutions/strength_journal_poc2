@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StrengthJournal.API.Model;
+using StrengthJournal.API.Model.Workouts;
 
 namespace StrengthJournal.API.Controllers
 {
@@ -22,7 +22,7 @@ namespace StrengthJournal.API.Controllers
                 { 
                     UserId = userId,
                     Page = page,
-                    perPage = perPage
+                    PerPage = perPage
                 });
                 return workouts;
             }
