@@ -18,5 +18,4 @@ WHERE
 ORDER BY EntryDateUTC DESC
 OFFSET (@Page * @PerPage) ROWS FETCH NEXT @PerPage ROWS ONLY;
 
-
 END

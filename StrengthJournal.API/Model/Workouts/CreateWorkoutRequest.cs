@@ -6,6 +6,6 @@ namespace StrengthJournal.API.Model.Workouts
     {
         [Required]
         public DateTime EntryDateUTC { get; set; }
-        public int? bodyweight { get; set; }
+        public int? Bodyweight { get; set; }
     }
 }

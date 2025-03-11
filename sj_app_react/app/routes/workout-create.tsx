@@ -5,6 +5,12 @@ import { FloatLabel } from "primereact/floatlabel";
 import { InputNumber } from "primereact/inputnumber";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { z } from "zod";
+
+const Workout = z.object({
+  entryDateUTC: z.coerce.date(),
+  bodyweight: z.coerce.number().nullable()
+})
 
 export default function CreateWorkout() {
   const [entryDateUTC, setEntryDateUTC] = useState(new Date());
@@ -14,14 +20,9 @@ export default function CreateWorkout() {
 
   function createWorkout(formData: FormData) {
     setWorking(true);
-    const body = Object.fromEntries(formData) as any;
-    body.entryDateUTC = new Date(body.entryDateUTC).toISOString();
-    if (body.bodyweight == '') {
-      body.bodyweight = null;
-    }
-    // TODO: There must be a better way to sanitize this data. Try zod?
+    const body = Workout.parse(Object.fromEntries(formData));
     sjclient.POST("/api/Workouts", {
-      body: body
+      body: body as any
     })
     .then((res) => {
       if (res.response.ok) {
