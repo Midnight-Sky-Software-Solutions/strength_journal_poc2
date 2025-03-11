@@ -25,7 +25,7 @@ namespace StrengthJournal.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<GetExercisesResponse>> GetExercise(Guid id)
+        public async Task<ActionResult<GetExerciseResponse>> GetExercise(Guid id)
         {
             using (var db = DB.SqlConnection)
             {

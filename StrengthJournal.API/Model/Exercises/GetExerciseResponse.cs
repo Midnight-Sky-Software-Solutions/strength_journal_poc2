@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public bool IsSystem { get; set; }
         public string ParentExerciseName { get; set; }
-        public Guid ParentExerciseId { get; set; }
+        public Guid? ParentExerciseId { get; set; }
     }
 }
