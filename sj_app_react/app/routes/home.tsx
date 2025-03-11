@@ -2,6 +2,7 @@ import { dateFormat1 } from "lib/utils";
 import type { Route } from "./+types/home";
 import { Button } from "primereact/button";
 import Journal from "~/components/home/journal";
+import { Link } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -22,7 +23,7 @@ export default function Home() {
             An inspirational quote would go here...
           </div>
           <div>
-            <Button>Start Logging</Button>
+            <Link to='/workouts/create'><Button>Start Logging</Button></Link>
           </div>
         </div>
         <Journal />

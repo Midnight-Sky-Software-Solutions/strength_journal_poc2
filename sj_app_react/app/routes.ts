@@ -6,5 +6,6 @@ export default [
   route("exercises/create", "routes/exercise-create.tsx"),
   route("exercises/:id", "routes/exercise-view.tsx"),
   route("exercises/:id/edit", "routes/exercise-edit.tsx"),
-  route("workouts/:id", "routes/workout.tsx")
+  route("workouts/create", "routes/workout-create.tsx"),
+  route("workouts/:id", "routes/workout.tsx"),
 ] satisfies RouteConfig;

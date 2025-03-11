@@ -15,7 +15,7 @@ FROM
     dbo.WorkoutLogEntries
 WHERE
     UserId = @UserId
-ORDER BY EntryDateUTC
+ORDER BY EntryDateUTC DESC
 OFFSET (@Page * @PerPage) ROWS FETCH NEXT @PerPage ROWS ONLY;
 
 
