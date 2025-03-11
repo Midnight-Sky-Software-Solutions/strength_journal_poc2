@@ -3,6 +3,10 @@ CREATE OR ALTER PROCEDURE spGetExercise (
     @ExerciseId UNIQUEIDENTIFIER
 )
 AS
+BEGIN
+
+SET NOCOUNT ON;
+
 SELECT
     e.ID,
     e.[Name],
@@ -19,3 +23,5 @@ WHERE
     (e.CreatedByUserId IS NULL
     OR e.CreatedByUserId = @UserId)
     AND e.Id = @ExerciseId
+
+END

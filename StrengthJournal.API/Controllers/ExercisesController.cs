@@ -23,5 +23,28 @@ namespace StrengthJournal.API.Controllers
                 return exercises;
             }
         }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<GetExercisesResponse>> GetExercise(Guid id)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                var sql = "EXEC spGetExercise @UserId, @ExerciseId";
+                var exercise = await db.QuerySingleOrDefaultAsync<GetExerciseResponse>(sql, new
+                {
+                    UserID = userId,
+                    ExerciseID = id
+                });
+                if (exercise == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(exercise);
+                }
+            }
+        }
     }
 }

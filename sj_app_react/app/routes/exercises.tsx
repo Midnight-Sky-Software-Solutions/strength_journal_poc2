@@ -2,6 +2,7 @@ import type { components } from "lib/clients/sj-client.d";
 import sjclient from "lib/clients/sj-client";
 import { useEffect, useState } from "react";
 import { HeartIcon } from "@heroicons/react/16/solid";
+import { Link } from "react-router";
 
 export default function Exercises() {
   const [exercises, setExercises] = useState([] as components["schemas"]["GetExercisesResponse"][]);
@@ -22,7 +23,7 @@ export default function Exercises() {
             {exercises.map(exercise => (
               <div key={exercise.id} className="flex gap-5 items-center">
                 <div className="w-6"><HeartIcon /></div>
-                <div className="text-lg">{exercise.name}</div>
+                <div className="text-lg"><Link to={`/exercises/${exercise.id}`}>{exercise.name}</Link></div>
               </div>
             ))}
           </div>
