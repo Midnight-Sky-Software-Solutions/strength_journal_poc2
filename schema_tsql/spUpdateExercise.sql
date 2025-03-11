@@ -5,6 +5,10 @@ CREATE OR ALTER PROCEDURE spUpdateExercise (
     @ParentExerciseId UNIQUEIDENTIFIER
 )
 AS
+BEGIN
+
+SET NOCOUNT ON;
+
 UPDATE
     dbo.Exercises
 SET
@@ -13,3 +17,5 @@ SET
 WHERE
     (CreatedByUserId = @UserId)
     AND Id = @ExerciseId
+
+END
