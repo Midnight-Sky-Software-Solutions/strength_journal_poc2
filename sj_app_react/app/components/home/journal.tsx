@@ -1,5 +1,4 @@
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
-import { auth0 } from "lib/clients/auth0-client";
 import sjclient from "lib/clients/sj-client";
 import type { components } from "lib/clients/sj-client.d";
 import { dateFormat1 } from "lib/utils";
