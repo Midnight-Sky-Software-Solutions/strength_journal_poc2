@@ -22,7 +22,7 @@ export default function Exercises() {
           <div className="flex">
             <h2 className="text-2xl font-bold">Exercises</h2>
             <div className="grow"></div>
-            <Link to='/exercises/create'><Button label="New" /></Link>
+            <Link to='/exercises/create'><Button label="New" size="small" /></Link>
           </div>
           <div className="flex flex-col gap-6 pt-5">
             {exercises.map(exercise => (

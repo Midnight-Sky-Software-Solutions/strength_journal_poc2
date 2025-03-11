@@ -10,6 +10,6 @@ namespace StrengthJournal.API.Model.Exercises
         public string Name { get; set; }
         public string ParentExerciseIdString { get; set; }
         [ReadOnly(true)]
-        public Guid? ParentExerciseId { get => (ParentExerciseIdString == "0") ? null : Guid.Parse(ParentExerciseIdString); }
+        public Guid? ParentExerciseId { get => (ParentExerciseIdString == "0" || ParentExerciseIdString == "") ? null : Guid.Parse(ParentExerciseIdString); }
     }
 }

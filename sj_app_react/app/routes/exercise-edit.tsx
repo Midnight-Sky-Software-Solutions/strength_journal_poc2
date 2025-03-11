@@ -47,6 +47,7 @@ export default function EditExercise({
       } else {
         if (res.response.status == 400) {
           setErrors((res.error! as any).errors);
+          setWorking(false);
         }
       }
     });
