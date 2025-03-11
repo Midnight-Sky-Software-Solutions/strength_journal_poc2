@@ -1,6 +1,7 @@
 import sjclient from "lib/clients/sj-client";
 import type { Route } from "./+types/exercise-view";
 import { Button } from "primereact/button";
+import { Link } from "react-router";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const result = await sjclient.GET('/api/Exercises/{id}', {
@@ -23,7 +24,9 @@ export default function ViewExercise({
           <div className="flex">
             <h2 className="text-2xl font-bold">{exercise.name}</h2>
             <div className="grow"></div>
-            <Button label="Edit" size="small" />
+            {!exercise.isSystem && (
+              <Link to={`/exercises/${exercise.id}/edit`}><Button label="Edit" size="small" /></Link>
+            )}
           </div>
           {exercise.parentExerciseId && (
             <span className="text-sm text-gray-500">{exercise.parentExerciseName} variation</span>
