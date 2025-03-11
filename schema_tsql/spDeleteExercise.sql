@@ -3,6 +3,11 @@ CREATE OR ALTER PROCEDURE spDeleteExercise (
     @ExerciseId UNIQUEIDENTIFIER
 )
 AS
+
+BEGIN
+
+SET NOCOUNT ON;
+
 DELETE FROM
     dbo.Exercises
 OUTPUT
@@ -10,3 +15,5 @@ OUTPUT
 WHERE
     (CreatedByUserId = @UserId)
     AND Id = @ExerciseId
+
+END

@@ -6,6 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const getExercise = sjclient.GET('/api/Exercises/{id}', {
@@ -33,6 +34,7 @@ export default function EditExercise({
   const [parentExerciseId, setParentExerciseId] = useState(exercise.parentExerciseId);
   const [errors, setErrors] = useState({} as { [field: string]: string[] });
   const [working, setWorking] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const navigate = useNavigate();
 
   function updateExercise(formData: FormData) {
@@ -53,11 +55,35 @@ export default function EditExercise({
     });
   }
 
+  function deleteExercise(e: Event) {
+    e.preventDefault();
+    setShowConfirmDelete(true);
+  }
+
+  function confirmDeleteExercise() {
+    setWorking(true);
+    sjclient.DELETE("/api/Exercises/{id}", {
+      params: {
+        path:{
+          id: exercise.id!
+        }
+      }
+    })
+    .then(() => {
+      navigate('/exercises');
+    })
+  }
+
   return (
     <div className="w-full flex justify-center pt-5">
       <div className="bclass-name grow max-w-6xl flex flex-col px-2 py-1 gap-5">
         <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
           <div>
+            <ConfirmDialog 
+              visible={showConfirmDelete}
+              accept={confirmDeleteExercise}
+              message="Are you sure you would like to delete this exercise?"
+            />
             <h2 className="text-2xl font-bold">{exercise.name}</h2>
             <form
               action={updateExercise}
@@ -97,9 +123,9 @@ export default function EditExercise({
                 <div>
                   <Button loading={working} label="Save" />
                 </div>
-                {/* <div className="grow">
-                  <Button disabled={working} onClick={deleteExercise}>Delete</Button>
-                </div> */}
+                <div className="grow">
+                  <Button disabled={working} onClick={e => deleteExercise(e)} severity="danger" outlined >Delete</Button>
+                </div>
               </div>
             </form>
           </div>

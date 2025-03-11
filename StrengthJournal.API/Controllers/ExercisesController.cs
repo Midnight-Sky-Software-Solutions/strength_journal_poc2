@@ -83,5 +83,21 @@ namespace StrengthJournal.API.Controllers
                 return Ok();
             }
         }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> DeleteExercise(Guid id)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                var sql = "EXEC spDeleteExercise @UserId, @ExerciseId";
+                await db.ExecuteScalarAsync<Guid>(sql, new
+                {
+                    UserId = userId,
+                    ExerciseId = id
+                });
+                return NoContent();
+            }
+        }
     }
 }
