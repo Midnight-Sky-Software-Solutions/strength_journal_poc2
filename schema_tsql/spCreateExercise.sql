@@ -5,6 +5,9 @@ CREATE OR ALTER PROCEDURE spCreateExercise (
 )
 AS
 BEGIN
+
+SET NOCOUNT ON;
+
 DECLARE @ExerciseId UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO
@@ -13,4 +16,5 @@ VALUES
     (@ExerciseId, @Name, @ParentExerciseID, @UserId);
 
 SELECT @ExerciseId;
+
 END

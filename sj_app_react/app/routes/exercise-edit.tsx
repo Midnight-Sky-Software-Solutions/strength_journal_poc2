@@ -87,7 +87,7 @@ export default function EditExercise({
                   name="parentExerciseIdString"
                   value={parentExerciseId}
                   onChange={(e) => setParentExerciseId(e.target.value)}
-                  options={loaderData.exercises}
+                  options={exercises}
                   className="w-60"
                 />
                 <label htmlFor="parentExerciseIdString">Parent Exercise</label>

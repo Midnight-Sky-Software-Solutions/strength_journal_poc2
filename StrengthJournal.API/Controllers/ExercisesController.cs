@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StrengthJournal.API.Model;
 using StrengthJournal.API.Model.Exercises;
 
 namespace StrengthJournal.API.Controllers
@@ -11,6 +12,22 @@ namespace StrengthJournal.API.Controllers
     [Authorize]
     public class ExercisesController : ControllerBase
     {
+        [HttpPost]
+        public async Task<ActionResult<GuidResponse>> CreateExercise(CreateExerciseRequest request)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                var id = await db.ExecuteScalarAsync<Guid>("EXEC spCreateExercise @UserId, @Name, @ParentExerciseID", new
+                {
+                    UserId = userId,
+                    request.ParentExerciseId,
+                    request.Name,
+                });
+                return Ok(new GuidResponse(id));
+            }
+        }
+
         [HttpGet]
         public async Task<IEnumerable<GetExercisesResponse>> GetExercises()
         {
