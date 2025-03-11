@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { HeartIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function Exercises() {
+  const [loading, setLoading] = useState(true);
   const [exercises, setExercises] = useState([] as components["schemas"]["GetExercisesResponse"][]);
   useEffect(() => {
     sjclient.GET('/api/Exercises')
       .then(res => {
         if (res.response.ok) {
+          setLoading(false);
           setExercises(res.data!)
         }
       })
@@ -25,6 +28,9 @@ export default function Exercises() {
             <Link to='/exercises/create'><Button label="New" size="small" /></Link>
           </div>
           <div className="flex flex-col gap-6 pt-5">
+            {loading && (
+              <ProgressSpinner />
+            )}
             {exercises.map(exercise => (
               <div key={exercise.id} className="flex gap-5 items-center">
                 <div className="w-6"><HeartIcon /></div>
