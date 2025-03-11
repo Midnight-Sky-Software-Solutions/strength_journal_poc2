@@ -25,7 +25,7 @@ export default function ViewExercise({
             <h2 className="text-2xl font-bold">{exercise.name}</h2>
             <div className="grow"></div>
             {!exercise.isSystem && (
-              <Link to={`/exercises/${exercise.id}/edit`}><Button label="Edit" size="small" /></Link>
+              <Link to={`/exercises/${exercise.id}/edit`}><Button label="Edit" size="small" outlined /></Link>
             )}
           </div>
           {exercise.parentExerciseId && (
