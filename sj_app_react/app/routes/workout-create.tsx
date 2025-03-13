@@ -26,7 +26,8 @@ export default function CreateWorkout() {
     })
     .then((res) => {
       if (res.response.ok) {
-        navigate('/workouts'); // TODO: navigate to workout
+        const workoutId = res.data?.result!;
+        navigate(`/workouts/${workoutId}/edit`);
       }
     })
   }

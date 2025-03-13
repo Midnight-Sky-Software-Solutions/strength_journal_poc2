@@ -44,5 +44,46 @@ namespace StrengthJournal.API.Controllers
                 return workouts;
             }
         }
+
+        [HttpGet("{workoutid:guid}")]
+        public async Task<ActionResult<GetWorkoutResponse>> GetWorkout([FromRoute] Guid workoutid)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                var sql = "EXEC spGetWorkout @UserId, @WorkoutId";
+                var workout = await db.QuerySingleOrDefaultAsync<GetWorkoutResponse>(sql, new
+                {
+                    UserId = userId,
+                    WorkoutID = workoutid
+                });
+                if (workout == null)
+                {
+                    return NotFound();
+                }
+                return workout;
+            }
+        }
+
+        [HttpPost("{workoutid:guid}/sets")]
+        public async Task<ActionResult> LogSet([FromRoute] Guid workoutid, LogSetRequest request)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                var sql = "EXEC spLogSet @UserId, @Id, @WorkoutLogEntryId, @ExerciseId, @Weight, @Reps, @RPE";
+                await db.ExecuteAsync(sql, new
+                {
+                    UserId = userId,
+                    Id = request.Id,
+                    WorkoutLogEntryId = workoutid,
+                    ExerciseId = request.ExerciseId,
+                    Weight = request.Weight,
+                    Reps = request.Reps,
+                    RPE = request.RPE,
+                });
+                return Ok();
+            }
+        }
     }
 }
