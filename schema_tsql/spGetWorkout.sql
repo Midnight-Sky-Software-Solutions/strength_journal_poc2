@@ -17,5 +17,16 @@ WHERE
     AND Id = @WorkoutId
 ORDER BY EntryDateUTC;
 
+SELECT
+    Id,
+    ExerciseId,
+    Reps,
+    Weight,
+    RPE
+FROM
+    dbo.WorkoutLogEntrySets
+WHERE
+    WorkoutLogEntryId = @WorkoutId;
+
 
 END

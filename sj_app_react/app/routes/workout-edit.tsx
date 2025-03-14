@@ -139,6 +139,9 @@ export default function EditWorkout({
             </div>
           </form>
         </div>
+        <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
+          
+        </div>
       </div>
     </div>
   );

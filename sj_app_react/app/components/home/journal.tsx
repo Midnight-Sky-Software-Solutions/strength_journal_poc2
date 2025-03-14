@@ -4,6 +4,7 @@ import type { components } from "lib/clients/sj-client.d";
 import { dateFormat1 } from "lib/utils";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 export default function Journal() {
   const perPage = 5;
@@ -38,7 +39,11 @@ export default function Journal() {
         {workouts.map(workout => (
           <div key={workout.id} className="flex gap-5 items-center">
             <div className="w-6"><PencilSquareIcon /></div>
-            <div className="text-lg">{dateFormat1(workout.entryDateUTC!)}</div>
+            <div className="text-lg">
+              <Link to={`/workouts/${workout.id}/edit`}>
+                {dateFormat1(workout.entryDateUTC!)}
+              </Link>
+            </div>
           </div>
         ))}
       </div>

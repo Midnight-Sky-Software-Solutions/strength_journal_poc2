@@ -52,15 +52,17 @@ namespace StrengthJournal.API.Controllers
             {
                 var userId = HttpContext.GetUserId();
                 var sql = "EXEC spGetWorkout @UserId, @WorkoutId";
-                var workout = await db.QuerySingleOrDefaultAsync<GetWorkoutResponse>(sql, new
+                var multiple = await db.QueryMultipleAsync(sql, new
                 {
                     UserId = userId,
                     WorkoutID = workoutid
                 });
+                var workout = await multiple.ReadSingleOrDefaultAsync<GetWorkoutResponse>();
                 if (workout == null)
                 {
                     return NotFound();
                 }
+                workout.Sets = await multiple.ReadAsync<SetData>();
                 return workout;
             }
         }

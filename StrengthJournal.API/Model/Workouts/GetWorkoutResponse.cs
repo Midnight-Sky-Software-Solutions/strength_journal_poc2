@@ -4,5 +4,6 @@
     {
         public Guid Id { get; set; }
         public DateTime EntryDateUTC { get; set; }
+        public IEnumerable<SetData> Sets { get; set; }
     }
 }
