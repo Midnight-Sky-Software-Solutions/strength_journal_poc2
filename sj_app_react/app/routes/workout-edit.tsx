@@ -2,23 +2,22 @@ import sjclient from "lib/clients/sj-client";
 import type { Route } from "./+types/workout-edit";
 import { dateFormat1 } from "lib/utils";
 import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { z } from "zod";
+import { z, ZodType, type ZodStringDef } from "zod";
 import { v4 as uuidv4 } from 'uuid';
 import { DataTable, type DataTableRowDataArray } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 
 const Set = z.object({
-  id: z.string(),
-  exerciseId: z.string(),
-  reps: z.coerce.number(),
-  weight: z.coerce.number().positive(),
-  rpe: z.string().transform(value => value == '' ? null : value).nullable().transform((value) => value == null ? null : Number(value))
+  id: z.string().length(36),
+  exerciseId: z.string().length(36, "An exercise must be specified"),
+  reps: z.coerce.number().gte(0),
+  weight: z.coerce.number().gte(0),
+  rpe: z.string().transform(value => !!value ? Number(value) : null)
 })
 
 type SetType = z.infer<typeof Set>;
@@ -57,7 +56,13 @@ export default function EditWorkout({
     formData.set('rpe', formData.get('rpe') ? (Number(formData.get('rpe')) * 2).toString() : '')
     const data = Object.fromEntries(formData);
     data.id = selectedSet?.id ?? id;
-    const body = Set.parse(data);
+    const { data: body, error, success } = Set.safeParse(data);
+    if (!success) {
+      const e = error.errors.reduce((prev, current) => Object.assign(prev, {[current.path[0]]: [current.message]}), {});
+      setErrors(e);
+      setWorking(false);
+      return;
+    }
     sjclient.POST("/api/Workouts/{workoutid}/sets", {
       params: {
         path: {
@@ -116,7 +121,7 @@ export default function EditWorkout({
           >
             <FloatLabel>
               <div className="text-red-500">
-                {!!errors['ExerciseId'] ? <small>{errors['ExerciseId'][0]}</small> : <></>}
+                {!!errors['exerciseId'] ? <small>{errors['exerciseId'][0]}</small> : <></>}
               </div>
               <Dropdown
                 invalid={!!errors['ParentExerciseIdString']}
@@ -131,10 +136,10 @@ export default function EditWorkout({
             </FloatLabel>
             <FloatLabel>
               <div className="text-red-500">
-                {!!errors['Weight'] ? <small>{errors['Weight'][0]}</small> : <></>}
+                {!!errors['weight'] ? <small>{errors['weight'][0]}</small> : <></>}
               </div>
               <InputNumber
-                invalid={!!errors['Weight']}
+                invalid={!!errors['weight']}
                 id="name"
                 className="grow max-w"
                 value={weight}
@@ -146,10 +151,10 @@ export default function EditWorkout({
             </FloatLabel>
             <FloatLabel>
               <div className="text-red-500">
-                {!!errors['Reps'] ? <small>{errors['Reps'][0]}</small> : <></>}
+                {!!errors['reps'] ? <small>{errors['reps'][0]}</small> : <></>}
               </div>
               <InputNumber
-                invalid={!!errors['Reps']}
+                invalid={!!errors['reps']}
                 id="name"
                 className="grow max-w"
                 value={reps}
@@ -161,10 +166,10 @@ export default function EditWorkout({
             </FloatLabel>
             <FloatLabel>
               <div className="text-red-500">
-                {!!errors['RPE'] ? <small>{errors['RPE'][0]}</small> : <></>}
+                {!!errors['rpe'] ? <small>{errors['rpe'][0]}</small> : <></>}
               </div>
               <InputNumber
-                invalid={!!errors['RPE']}
+                invalid={!!errors['rpe']}
                 id="name"
                 className="grow max-w"
                 value={rpe}

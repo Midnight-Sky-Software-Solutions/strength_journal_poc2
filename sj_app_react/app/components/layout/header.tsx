@@ -27,7 +27,7 @@ export default function Header() {
           </button>
           <ul className="hidden sm:flex flex-row gap-5 items-center">
             {navItems.map(navItem => (
-              <li key={navItem.name} className="text-xl font-medium"><NavLink to={navItem.href}>{navItem.name}</NavLink></li>
+              <li key={navItem.name} className="text-xl font-medium"><NavLink to={navItem.href} className={({isActive}) => isActive ? 'text-blue-500' : ''}>{navItem.name}</NavLink></li>
             ))}
           </ul>
           <div className="grow"></div>
