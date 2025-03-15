@@ -260,6 +260,7 @@ export default function EditWorkout({
             reorderableRows 
             onRowReorder={e => updateSetOrder(e.value)}
             disabled={working}
+            size="small"
           >
             <Column rowReorder style={{ width: '3rem' }} />
             <Column field="exerciseName" header="Exercise Name" />
