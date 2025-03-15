@@ -8,4 +8,5 @@ export default [
   route("exercises/:id/edit", "routes/exercise-edit.tsx"),
   route("workouts/create", "routes/workout-create.tsx"),
   route("workouts/:id/edit", "routes/workout-edit.tsx"),
+  route("workouts", "routes/workouts.tsx")
 ] satisfies RouteConfig;
