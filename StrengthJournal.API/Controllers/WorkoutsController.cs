@@ -1,7 +1,9 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using StrengthJournal.API.Model;
 using StrengthJournal.API.Model.Workouts;
 
@@ -86,6 +88,32 @@ namespace StrengthJournal.API.Controllers
                 });
                 return Ok();
             }
+        }
+
+        [HttpPut("{workoutid:guid}/sets/sequence")]
+        public async Task<ActionResult> UpdateSetSequence([FromRoute] Guid workoutid, ICollection<UpdateSetSequenceRequest> request)
+        {
+            var userId = HttpContext.GetUserId();
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Sequence");
+
+            foreach (var set in request)
+            {
+                dt.Rows.Add(set.Id, set.Sequence);
+            }
+
+            using (var db = DB.SqlConnection)
+            {
+                await db.ExecuteAsync("EXEC spUpdateSetOrder @UserId, @WorkoutLogEntryId, @SetOrder", new
+                {
+                    UserId = userId,
+                    WorkoutLogEntryId = workoutid,
+                    SetOrder = dt.AsTableValuedParameter("tvpSetSequence")
+                });
+            }
+
+            return Ok();
         }
     }
 }

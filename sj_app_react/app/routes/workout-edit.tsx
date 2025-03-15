@@ -9,7 +9,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
-import { DataTable } from "primereact/datatable";
+import { DataTable, type DataTableRowDataArray } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 
@@ -20,6 +20,8 @@ const Set = z.object({
   weight: z.coerce.number().positive(),
   rpe: z.string().transform(value => value == '' ? null : value).nullable().transform((value) => value == null ? null : Number(value))
 })
+
+type SetType = z.infer<typeof Set>;
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const getWorkout = sjclient.GET("/api/Workouts/{workoutid}", {
@@ -41,13 +43,14 @@ export default function EditWorkout({
 }: Route.ComponentProps) {
   const { workout, exercises } = loaderData;
   const [sets, setSets] = useState(workout.sets);
-  const [exerciseId, setExerciseId] = useState(null as string | null);
-  const [weight, setWeight] = useState(null as number | null);
-  const [reps, setReps] = useState(null as number | null);
-  const [rpe, setRpe] = useState(null as number | null);
+  const [exerciseId, setExerciseId] = useState(undefined as string | undefined);
+  const [weight, setWeight] = useState(undefined as number | undefined);
+  const [reps, setReps] = useState(undefined as number | undefined);
+  const [rpe, setRpe] = useState(undefined as number | undefined);
   const [errors, setErrors] = useState({} as { [field: string]: string[] });
   const [working, setWorking] = useState(false);
-  const [id, setId] = useState(uuidv4())
+  const [id, setId] = useState(uuidv4());
+  const [selectedSet, setSelectedSet] = useState(undefined as SetType | undefined);
 
   function addSet(formData: FormData) {
     setWorking(true);
@@ -71,6 +74,27 @@ export default function EditWorkout({
       setWorking(false);
     });
     setId(uuidv4());
+  }
+
+  function updateSetOrder(values: DataTableRowDataArray<{id?: string | undefined}[]>) {
+    setWorking(true);
+    const data = values.map((x, i) => ({ id: x.id, sequence: i }));
+    sjclient.PUT("/api/Workouts/{workoutid}/sets/sequence", {
+      params: {
+        path: {
+          workoutid: workout.id!
+        },
+      },
+      body: data
+    }).finally(() => setWorking(false));
+  }
+
+  function selectionChanged(value?: SetType) {
+    setSelectedSet(value);
+    setExerciseId(value?.exerciseId ?? undefined);
+    setWeight(value?.weight ?? undefined);
+    setReps(value?.reps ?? undefined);
+    setRpe(value?.rpe ?? undefined);
   }
 
   return (
@@ -110,7 +134,7 @@ export default function EditWorkout({
                 value={weight}
                 name="weight"
                 min={0}
-                onChange={(e) => setWeight(e.value)}
+                onChange={(e) => setWeight(e.value ?? undefined)}
               />
               <label htmlFor="name">Weight</label>
             </FloatLabel>
@@ -125,7 +149,7 @@ export default function EditWorkout({
                 value={reps}
                 name="reps"
                 min={0}
-                onChange={(e) => setReps(e.value)}
+                onChange={(e) => setReps(e.value ?? undefined)}
               />
               <label htmlFor="name">Reps</label>
             </FloatLabel>
@@ -141,12 +165,18 @@ export default function EditWorkout({
                 name="rpe"
                 min={1}
                 max={10}
-                onChange={(e) => setRpe(e.value)}
+                onChange={(e) => setRpe(e.value ?? undefined)}
               />
               <label htmlFor="name">RPE</label>
             </FloatLabel>
-            <div>
-              <Button loading={working} label="Add Set" />
+            <div className="flex gap-3">
+              <Button loading={working} label={!!selectedSet ? 'Update Set' : 'Add Set'} />
+              {!!selectedSet &&
+                <Button outlined loading={working} label='Cancel'
+                  onClick={e =>{ e.preventDefault(); setSelectedSet(undefined); }}
+              />
+              }
+              
             </div>
           </form>
         </div>
@@ -154,12 +184,17 @@ export default function EditWorkout({
           <DataTable 
             value={sets!}
             selectionMode="single"
+            onSelectionChange={e => selectionChanged(e.value as SetType | undefined)}
+            selection={selectedSet}
+            dataKey="id"
             reorderableRows 
+            onRowReorder={e => updateSetOrder(e.value)}
+            disabled={working}
           >
             <Column rowReorder style={{ width: '3rem' }} />
             <Column field="exerciseName" header="Exercise Name" />
-            <Column field="reps" header="Reps" />
             <Column field="weight" header="Weight" />
+            <Column field="reps" header="Reps" />
             <Column field="rpe" header="RPE" />
           </DataTable>
         </div>
