@@ -101,6 +101,7 @@ export default function EditWorkout({
   }
 
   function selectionChanged(value?: SetType) {
+    setErrors({});
     setSelectedSet(value);
     setExerciseId(value?.exerciseId ?? undefined);
     setWeight(value?.weight ?? undefined);
