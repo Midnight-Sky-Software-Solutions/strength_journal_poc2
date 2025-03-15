@@ -22,8 +22,28 @@ IF NOT EXISTS (
 )
 THROW 51000, 'Authentication failure', 1;
 
-INSERT INTO
-    dbo.WorkoutLogEntrySets (
+MERGE
+    dbo.WorkoutLogEntrySets tgt
+USING (
+    SELECT 
+        @Id,
+        @WorkoutLogEntryId,
+        @ExerciseId,
+        @Reps,
+        @Weight,
+        @RPE,
+        (SELECT MAX(Sequence) FROM WorkoutLogEntrySets WHERE WorkoutLogEntryId = @WorkoutLogEntryId) + 1)
+    AS src(Id, WorkoutLogEntryId, ExerciseId, Reps, Weight, RPE, Sequence)
+    ON (src.Id = tgt.Id)
+WHEN MATCHED
+    THEN
+        UPDATE
+            SET 
+                Reps = src.Reps,
+                Weight = src.Weight,
+                RPE = src.RPE
+WHEN NOT MATCHED
+    THEN INSERT (
         Id,
         WorkoutLogEntryId,
         ExerciseId,
@@ -32,14 +52,15 @@ INSERT INTO
         RPE,
         Sequence
     )
-VALUES (
-    @Id,
-    @WorkoutLogEntryId,
-    @ExerciseId,
-    @Reps,
-    @Weight,
-    @RPE,
-    (SELECT MAX(Sequence) FROM WorkoutLogEntrySets WHERE WorkoutLogEntryId = @WorkoutLogEntryId) + 1
-)
+    VALUES (
+        src.Id,
+        src.WorkoutLogEntryId,
+        src.ExerciseId,
+        src.Reps,
+        src.Weight,
+        src.RPE,
+        src.Sequence
+    );
+            
 
 END

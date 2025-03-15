@@ -56,7 +56,7 @@ export default function EditWorkout({
     setWorking(true);
     formData.set('rpe', formData.get('rpe') ? (Number(formData.get('rpe')) * 2).toString() : '')
     const data = Object.fromEntries(formData);
-    data.id = id;
+    data.id = selectedSet?.id ?? id;
     const body = Set.parse(data);
     sjclient.POST("/api/Workouts/{workoutid}/sets", {
       params: {
@@ -67,7 +67,13 @@ export default function EditWorkout({
       body: body
     }).then((res) => {
       if (res.response.ok) {
-        setSets([...sets!, { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label }]);
+        if (!selectedSet) {
+          setSets([...sets!, { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label }]);
+        } else {
+          setSets(sets?.map(set => set.id === selectedSet.id ? { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label } : set));
+          setSelectedSet(undefined);
+          selectionChanged(undefined);
+        }
       } else {
         setErrors(res.error!);
       }
@@ -173,7 +179,7 @@ export default function EditWorkout({
               <Button loading={working} label={!!selectedSet ? 'Update Set' : 'Add Set'} />
               {!!selectedSet &&
                 <Button outlined loading={working} label='Cancel'
-                  onClick={e =>{ e.preventDefault(); setSelectedSet(undefined); }}
+                  onClick={e =>{ e.preventDefault(); setSelectedSet(undefined); selectionChanged(undefined); }}
               />
               }
               
