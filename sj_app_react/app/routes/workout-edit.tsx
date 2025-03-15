@@ -9,6 +9,8 @@ import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 
 const Set = z.object({
@@ -16,7 +18,7 @@ const Set = z.object({
   exerciseId: z.string(),
   reps: z.coerce.number(),
   weight: z.coerce.number(),
-  rpe: z.coerce.number().nullable()
+  rpe: z.coerce.number().positive()
 })
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -38,6 +40,7 @@ export default function EditWorkout({
   loaderData
 }: Route.ComponentProps) {
   const { workout, exercises } = loaderData;
+  const [sets, setSets] = useState(workout.sets);
   const [exerciseId, setExerciseId] = useState(null as string | null);
   const [weight, setWeight] = useState(null as number | null);
   const [reps, setReps] = useState(null as number | null);
@@ -58,6 +61,8 @@ export default function EditWorkout({
         },
       },
       body: body
+    }).then(() => {
+      setSets([...sets!, { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label }]);
     });
     setId(uuidv4());
   }
@@ -140,7 +145,12 @@ export default function EditWorkout({
           </form>
         </div>
         <div className="bg-white rounded-3xl py-5 px-5 mt-3 sm:mt-0 flex flex-col">
-      
+          <DataTable value={sets!}>
+            <Column field="exerciseName" header="Exercise Name" />
+            <Column field="reps" header="Reps" />
+            <Column field="weight" header="Weight" />
+            <Column field="rpe" header="RPE" />
+          </DataTable>
         </div>
       </div>
     </div>

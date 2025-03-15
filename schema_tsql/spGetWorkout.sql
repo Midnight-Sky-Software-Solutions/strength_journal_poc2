@@ -18,13 +18,15 @@ WHERE
 ORDER BY EntryDateUTC;
 
 SELECT
-    Id,
-    ExerciseId,
-    Reps,
-    Weight,
-    RPE
+    s.Id,
+    s.ExerciseId,
+    e.Name [ExerciseName],
+    s.Reps,
+    s.Weight,
+    s.RPE
 FROM
-    dbo.WorkoutLogEntrySets
+    dbo.WorkoutLogEntrySets s
+    INNER JOIN dbo.Exercises e ON s.ExerciseId = e.Id
 WHERE
     WorkoutLogEntryId = @WorkoutId;
 

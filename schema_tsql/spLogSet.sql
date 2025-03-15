@@ -29,7 +29,8 @@ INSERT INTO
         ExerciseId,
         Reps,
         Weight,
-        RPE
+        RPE,
+        Sequence
     )
 VALUES (
     @Id,
@@ -37,7 +38,8 @@ VALUES (
     @ExerciseId,
     @Reps,
     @Weight,
-    @RPE
+    @RPE,
+    (SELECT MAX(Sequence) FROM WorkoutLogEntrySets WHERE WorkoutLogEntryId = @WorkoutLogEntryId) + 1
 )
 
 END

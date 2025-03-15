@@ -25,7 +25,7 @@ export default function Header() {
           >
             <Bars3Icon className="h-12" />
           </button>
-          <ul className="hidden sm:flex flex-row gap-3 items-center">
+          <ul className="hidden sm:flex flex-row gap-5 items-center">
             {navItems.map(navItem => (
               <li key={navItem.name} className="text-xl font-medium"><NavLink to={navItem.href}>{navItem.name}</NavLink></li>
             ))}
@@ -33,8 +33,6 @@ export default function Header() {
           <div className="grow"></div>
           <UserCircleIcon className="h-12" />
         </div>
-
-
 
         {showNav && (
           <ul className="flex flex-col items-center gap-3 py-2 sm:hidden">
