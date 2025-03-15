@@ -64,7 +64,7 @@ export default function EditWorkout({
 
   return (
     <div className="w-full flex justify-center pt-5">
-      <div className="bclass-name grow max-w-6xl flex flex-col px-2 py-1 gap-5">
+      <div className="bclass-name grow max-w-6xl px-2 py-1 gap-5 sm:grid grid-cols-1 sm:grid-cols-2">
         <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
           <div className="flex">
             <h2 className="text-2xl font-bold">{dateFormat1(workout.entryDateUTC!)}</h2>
@@ -139,8 +139,8 @@ export default function EditWorkout({
             </div>
           </form>
         </div>
-        <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
-          
+        <div className="bg-white rounded-3xl py-5 px-5 mt-3 sm:mt-0 flex flex-col">
+      
         </div>
       </div>
     </div>
