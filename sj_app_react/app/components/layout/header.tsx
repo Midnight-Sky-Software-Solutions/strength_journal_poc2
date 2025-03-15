@@ -1,6 +1,6 @@
 import { Bars3Icon, UserCircleIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 
 const navItems = [
   { name: 'Dashboard', href: '' },
@@ -20,17 +20,24 @@ export default function Header() {
 
         <div className="flex">
           <button
+            className="sm:hidden"
             onClick={() => setShowNav(!showNav)}
           >
-            <Bars3Icon className="h-12" 
-            />
+            <Bars3Icon className="h-12" />
           </button>
+          <ul className="hidden sm:flex flex-row gap-3 items-center">
+            {navItems.map(navItem => (
+              <li key={navItem.name} className="text-xl font-medium"><NavLink to={navItem.href}>{navItem.name}</NavLink></li>
+            ))}
+          </ul>
           <div className="grow"></div>
           <UserCircleIcon className="h-12" />
         </div>
 
+
+
         {showNav && (
-          <ul className="flex flex-col items-center gap-3 py-2">
+          <ul className="flex flex-col items-center gap-3 py-2 sm:hidden">
             {navItems.map(navItem => (
               <li key={navItem.name} className="text-lg font-medium"><Link to={navItem.href}>{navItem.name}</Link></li>
             ))}
