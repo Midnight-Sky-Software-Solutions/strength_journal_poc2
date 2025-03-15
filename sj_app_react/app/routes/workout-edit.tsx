@@ -109,6 +109,24 @@ export default function EditWorkout({
     setRpe(value?.rpe ?? undefined);
   }
 
+  function deleteSet(setId: string) {
+    setWorking(true);
+    sjclient.DELETE("/api/Workouts/{workoutid}/sets/{setid}", {
+      params: {
+        path: {
+          workoutid: workout.id!,
+          setid: setId
+        }
+      }
+    })
+    .then(() => {
+      setSets(sets?.filter(s => s.id !== setId));
+      setSelectedSet(undefined);
+      selectionChanged(undefined);
+    })
+    .finally(() => setWorking(false));
+  }
+
   return (
     <div className="w-full flex justify-center pt-5">
       <div className="bclass-name grow max-w-6xl px-2 py-1 gap-5 sm:grid grid-cols-1 sm:grid-cols-2">
@@ -184,9 +202,14 @@ export default function EditWorkout({
             <div className="flex gap-3">
               <Button loading={working} label={!!selectedSet ? 'Update Set' : 'Add Set'} />
               {!!selectedSet &&
+              <>
+                <Button outlined disabled={working} label='Delete' 
+                  onClick={() => deleteSet(selectedSet.id)}
+                />
                 <Button outlined loading={working} label='Cancel'
                   onClick={e =>{ e.preventDefault(); setSelectedSet(undefined); selectionChanged(undefined); }}
-              />
+                />
+              </>
               }
               
             </div>

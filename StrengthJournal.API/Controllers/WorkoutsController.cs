@@ -115,5 +115,23 @@ namespace StrengthJournal.API.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{workoutid:guid}/sets/{setid:guid}")]
+        public async Task<ActionResult> DeleteSet([FromRoute] Guid workoutid, [FromRoute] Guid setid)
+        {
+            var userId = HttpContext.GetUserId();
+
+            using (var db = DB.SqlConnection)
+            {
+                await db.ExecuteAsync("EXEC spDeleteSet @UserId, @WorkoutLogEntryId, @SetId", new
+                {
+                    UserId = userId,
+                    WorkoutLogEntryId = workoutid,
+                    SetId = setid
+                });
+            }
+
+            return Ok();
+        }
     }
 }
