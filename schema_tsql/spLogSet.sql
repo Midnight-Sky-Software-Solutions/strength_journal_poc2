@@ -32,7 +32,10 @@ USING (
         @Reps,
         @Weight,
         @RPE,
-        (SELECT MAX(Sequence) FROM WorkoutLogEntrySets WHERE WorkoutLogEntryId = @WorkoutLogEntryId) + 1)
+        COALESCE(
+        (SELECT MAX(Sequence) FROM WorkoutLogEntrySets WHERE WorkoutLogEntryId = @WorkoutLogEntryId) + 1,
+        0)
+    )
     AS src(Id, WorkoutLogEntryId, ExerciseId, Reps, Weight, RPE, Sequence)
     ON (src.Id = tgt.Id)
 WHEN MATCHED
