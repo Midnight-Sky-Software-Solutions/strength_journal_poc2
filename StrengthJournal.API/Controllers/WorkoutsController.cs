@@ -133,5 +133,23 @@ namespace StrengthJournal.API.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{workoutid:guid}")]
+        public async Task<ActionResult> DeleteWorkout([FromRoute] Guid workoutid)
+        {
+            var userId = HttpContext.GetUserId();
+
+            using (var db = DB.SqlConnection)
+            {
+                await db.ExecuteAsync("EXEC spDeleteWorkout @UserId, @WorkoutLogEntryId", new
+                {
+                    UserId = userId,
+                    WorkoutLogEntryId = workoutid,
+                });
+            }
+
+            return Ok();
+        }
+
     }
 }

@@ -10,6 +10,8 @@ import { z, ZodType, type ZodStringDef } from "zod";
 import { v4 as uuidv4 } from 'uuid';
 import { DataTable, type DataTableRowDataArray } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { useNavigate } from "react-router";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 
 const Set = z.object({
@@ -50,6 +52,8 @@ export default function EditWorkout({
   const [working, setWorking] = useState(false);
   const [id, setId] = useState(uuidv4());
   const [selectedSet, setSelectedSet] = useState(undefined as SetType | undefined);
+  const [showDeleteWorkout, setShowDeleteWorkout] = useState(false);
+  const navigate = useNavigate();
 
   function addSet(formData: FormData) {
     setWorking(true);
@@ -97,7 +101,8 @@ export default function EditWorkout({
         },
       },
       body: data
-    }).finally(() => setWorking(false));
+    })
+    .finally(() => setWorking(false));
   }
 
   function selectionChanged(value?: SetType) {
@@ -127,12 +132,42 @@ export default function EditWorkout({
     .finally(() => setWorking(false));
   }
 
+  function confirmDeleteWorkout() {
+    setShowDeleteWorkout(true);
+  }
+
+  function deleteWorkout() {
+    setWorking(true);
+    sjclient.DELETE('/api/Workouts/{workoutid}', {
+      params: {
+        path: {
+          workoutid: workout.id!
+        }
+      }
+    })
+    .then(() => navigate('/workouts'))
+    .finally(() => setWorking(false));
+  }
+
   return (
     <div className="w-full flex justify-center pt-5">
       <div className="bclass-name grow max-w-6xl px-2 py-1 gap-5 sm:grid grid-cols-1 sm:grid-cols-2">
         <div className="bg-white rounded-3xl py-5 px-5 flex flex-col">
           <div className="flex">
+            <ConfirmDialog 
+              visible={showDeleteWorkout}
+              onHide={() => setShowDeleteWorkout(false)}
+              accept={deleteWorkout}
+              message="Are you sure you would like to delete this workout?"
+            />
             <h2 className="text-2xl font-bold">{dateFormat1(workout.entryDateUTC!)}</h2>
+            <div className="grow"></div>
+            <Button 
+              outlined
+              label="Delete"
+              size="small"
+              onClick={() => confirmDeleteWorkout()}
+            />
           </div>
           <form
             action={addSet}
