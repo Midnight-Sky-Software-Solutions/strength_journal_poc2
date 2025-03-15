@@ -17,8 +17,8 @@ const Set = z.object({
   id: z.string(),
   exerciseId: z.string(),
   reps: z.coerce.number(),
-  weight: z.coerce.number(),
-  rpe: z.coerce.number().positive()
+  weight: z.coerce.number().positive(),
+  rpe: z.string().transform(value => value == '' ? null : value).nullable().transform((value) => value == null ? null : Number(value))
 })
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -50,6 +50,7 @@ export default function EditWorkout({
   const [id, setId] = useState(uuidv4())
 
   function addSet(formData: FormData) {
+    setWorking(true);
     formData.set('rpe', formData.get('rpe') ? (Number(formData.get('rpe')) * 2).toString() : '')
     const data = Object.fromEntries(formData);
     data.id = id;
@@ -61,8 +62,13 @@ export default function EditWorkout({
         },
       },
       body: body
-    }).then(() => {
-      setSets([...sets!, { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label }]);
+    }).then((res) => {
+      if (res.response.ok) {
+        setSets([...sets!, { ...data, exerciseName: exercises.find(e => e.value === data.exerciseId)?.label }]);
+      } else {
+        setErrors(res.error!);
+      }
+      setWorking(false);
     });
     setId(uuidv4());
   }
@@ -145,7 +151,12 @@ export default function EditWorkout({
           </form>
         </div>
         <div className="bg-white rounded-3xl py-5 px-5 mt-3 sm:mt-0 flex flex-col">
-          <DataTable value={sets!}>
+          <DataTable 
+            value={sets!}
+            selectionMode="single"
+            reorderableRows 
+          >
+            <Column rowReorder style={{ width: '3rem' }} />
             <Column field="exerciseName" header="Exercise Name" />
             <Column field="reps" header="Reps" />
             <Column field="weight" header="Weight" />

@@ -28,7 +28,8 @@ FROM
     dbo.WorkoutLogEntrySets s
     INNER JOIN dbo.Exercises e ON s.ExerciseId = e.Id
 WHERE
-    WorkoutLogEntryId = @WorkoutId;
+    WorkoutLogEntryId = @WorkoutId
+ORDER BY [Sequence];
 
 
 END
