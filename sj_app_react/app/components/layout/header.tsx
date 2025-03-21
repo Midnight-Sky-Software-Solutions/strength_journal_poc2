@@ -1,9 +1,10 @@
 import { Bars3Icon, UserCircleIcon } from "@heroicons/react/16/solid";
+import { auth0 } from "lib/clients/auth0-client";
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 
 const navItems = [
-  { name: 'Dashboard', href: '' },
+  { name: 'Dashboard', href: '/' },
   { name: 'Exercises', href: '/exercises' },
   { name: 'Workouts', href: '/workouts' },
 ]
@@ -31,7 +32,10 @@ export default function Header() {
             ))}
           </ul>
           <div className="grow"></div>
-          <UserCircleIcon className="h-12" />
+          <UserCircleIcon 
+            onClick={() => auth0.logout()}
+            className="h-12" 
+          />
         </div>
 
         {showNav && (

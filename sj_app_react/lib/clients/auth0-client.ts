@@ -4,7 +4,7 @@ export const auth0 = new Auth0Client({
   domain: "dev-bs65rtlog25jigd0.us.auth0.com",
   clientId: "byMfHvaRsuKC1IGM9SLQtrIaAvS7wL5v",
   authorizationParams: {
-    redirect_uri: window.location.origin,
+    redirect_uri: 'http://localhost:5173/',
     audience: 'https://localhost:7080/api',
     scope: "read:current_user",
   }

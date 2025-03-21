@@ -2,13 +2,25 @@ import { dateFormat1 } from "lib/utils";
 import type { Route } from "./+types/home";
 import { Button } from "primereact/button";
 import Journal from "~/components/home/journal";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
+import sjclient from "lib/clients/sj-client";
 
 export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Strength Journal" },
     { name: "description", content: "Record your workouts!" },
   ];
+}
+
+export async function clientLoader({
+  params,
+}: Route.ClientLoaderArgs) {
+  const { data, response } = await sjclient.GET("/api/Users/me");
+  if (!response.ok && response.status == 404) {
+    console.log('onboarding required');
+    return redirect('/onboard');
+  }
+  return data!;
 }
 
 export default function Home() {

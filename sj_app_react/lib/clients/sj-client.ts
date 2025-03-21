@@ -16,7 +16,7 @@ const sjMiddleware: Middleware = {
       request.headers.set("Authorization", `Bearer ${token}`);
     } catch (e: any) {
       if (e.message == 'Login required') {
-        auth0.loginWithRedirect();
+        await auth0.loginWithRedirect();
       } else {
         throw e;
       }
@@ -25,7 +25,7 @@ const sjMiddleware: Middleware = {
   }
 
 }
-
+ 
 sjclient.use(sjMiddleware);
 
 const prefix = "sj-api";

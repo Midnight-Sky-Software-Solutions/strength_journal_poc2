@@ -3,7 +3,7 @@ import Journal from "~/components/home/journal";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Workouts - Strength Journal" },
+    { title: "Workouts | Strength Journal" },
   ];
 }
 

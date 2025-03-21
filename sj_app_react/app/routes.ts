@@ -1,4 +1,4 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, index, layout, prefix, route } from "@react-router/dev/routes";
 
 export default [
   index("routes/home.tsx"),
@@ -8,5 +8,9 @@ export default [
   route("exercises/:id/edit", "routes/exercise-edit.tsx"),
   route("workouts/create", "routes/workout-create.tsx"),
   route("workouts/:id/edit", "routes/workout-edit.tsx"),
-  route("workouts", "routes/workouts.tsx")
+  route("workouts", "routes/workouts.tsx"),
+
+  ...prefix("onboard", [
+    index("routes/auth/onboard.tsx")
+  ])
 ] satisfies RouteConfig;
