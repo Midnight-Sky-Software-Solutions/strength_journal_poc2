@@ -27,5 +27,21 @@ namespace StrengthJournal.API.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> OnboardUser(OnboardUserRequest request)
+        {
+            using (var db = DB.SqlConnection)
+            {
+                var userId = HttpContext.GetUserId();
+                await db.ExecuteAsync("spOnboardUser @UserId, @PreferredWeightUnitId, @UserCountryCode", new
+                {
+                    UserId = userId,
+                    request.PreferredWeightUnitId,
+                    request.UserCountryCode
+                });
+                return Created();
+            }
+        }
     }
 }
