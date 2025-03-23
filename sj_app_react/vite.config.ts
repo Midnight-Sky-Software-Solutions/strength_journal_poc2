@@ -15,7 +15,7 @@ export default defineConfig({
     }
   },
   ssr: {
-    noExternal: ["primereact"],
+    noExternal: ["primereact", "@auth0/auth0-spa-js"],
     
   }
 });
