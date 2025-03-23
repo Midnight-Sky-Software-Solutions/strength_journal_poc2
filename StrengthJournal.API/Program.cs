@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("https://strengthjournal.joelj.ca");
+            policy.WithOrigins("https://strengthjournal.joelj.ca").AllowAnyHeader().AllowAnyMethod();
         });
 });
 
