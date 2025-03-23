@@ -4,6 +4,6 @@ BEGIN
 SELECT 
     [Code],
     [Name]
-FROM [StrengthJournalLocalDev].[dbo].[Countries]
+FROM [dbo].[Countries]
 
 END

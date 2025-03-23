@@ -8,7 +8,7 @@ SELECT
     [PreferredWeightUnitId],
     [UserCountryCode]
 FROM 
-    [StrengthJournalLocalDev].[dbo].[Users]
+    [dbo].[Users]
 WHERE ID = @UserId;
 
 END

@@ -4,6 +4,7 @@ import { auth0 } from "./auth0-client";
 import { createImmutableHook, createInfiniteHook, createMutateHook, createQueryHook } from "swr-openapi";
 
 const sjclient = createClient<paths>({
+  baseUrl: import.meta.env.VITE_API_BASE_URL
 });
 
 export default sjclient;
